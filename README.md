@@ -1,11 +1,7 @@
-# CUDA/C++11 cmake starter with google test and google benchmark
+# CUDA/C++11 cmake starter with google test 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-A cross-platform CUDA/C++11 starter project with google test and google
-benchmark support.
-
-See [this project](https://github.com/PhDP/cmake-gtest-gbench-starter) for a
-similar starter for C++11 only.
+A cross-platform CUDA/C++11 starter project with google test support.
 
 # Build
 
@@ -15,13 +11,11 @@ On Linux/Unix, to build and make the test:
     $ cmake ..
     $ make
 
-By default, the makefiles will build the library, executable, tests,
-and benchmarks. The commands
+By default, the makefiles will build the library, executable and tests. The commands
 
     $ ./test/deepgreen_tests
-    $ ./bench/deepgreen_benchmark
 
-...will run the tests and benchmarks.
+...will run the tests.
 
 On Windows, you can use cmake to generate Visual Studio build files with
 the same 'cmake ..' command.
