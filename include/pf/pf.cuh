@@ -26,8 +26,6 @@ __device__ float calc_norm_squared_in(float* vec, float* mat, int vec_length);
 
 __device__ void update_particle(systemModel model, float* current_state_estimate, float* current_measurement);
 
-__device__ float* pf(float* measurements, systemModel model, int num_samples, int num_particles);
-
 __device__ void vec_mutate_divide(float* vec, float divisor, int length);
 
 __device__ float sum(float* vec, int length);
@@ -53,3 +51,5 @@ __device__ float* resample_particles(float* particles, float* weights, int num_p
 __device__ void predict_particles_step(systemModel model, float* particles, int num_particles);
 
 __device__ float* initialize_particles(systemModel model, int num_particles);
+
+__global__ void pf(float* measurements, systemModel model, int num_samples, int num_particles);

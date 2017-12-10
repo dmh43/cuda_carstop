@@ -183,14 +183,15 @@ __device__ float* initialize_particles(systemModel model,
     return particles;
 }
 
-__global__ float* pf(float* measurements,
+__global__ void pf(float* estimates,
+                     float* measurements,
                      systemModel model,
                      int num_samples,
                      int num_particles,
                      curandState* states) {
     float* particles = initialize_particles(model, num_particles, state);
     float* weights = alloc_float(num_particles);
-    float* estimates = alloc_float(num_samples * model.num_state_variables);
+    // float* estimates = alloc_float(num_samples * model.num_state_variables);
     for (int sample_index = 0; sample_index < num_samples; sample_index++) {
         float* current_measurement = &measurements[sample_index * model.num_measurement_variables];
         update_importance_weights(weights, model, current_measurement, particles, num_particles);
@@ -200,5 +201,4 @@ __global__ float* pf(float* measurements,
     }
     free(weights);
     free(particles);
-    return estimates;
 }
