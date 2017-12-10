@@ -1,14 +1,14 @@
-set(deepgreen_src
-  matrix_mm.cu
+set(pf_src
+  pf.cu
 )
 
-cuda_add_library(deepgreen ${LIB_TYPE} ${deepgreen_src})
+cuda_add_library(pf ${LIB_TYPE} ${pf_src})
 
-target_link_libraries(deepgreen
+target_link_libraries(pf
   ${CUDA_CUBLAS_LIBRARIES}
   ${CMAKE_THREAD_LIBS_INIT}
   ${MATH_LIBS}
 )
 
-install(TARGETS deepgreen LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
-install(DIRECTORY ../include/deepgreen DESTINATION include)
+install(TARGETS pf LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
+install(DIRECTORY ../include/pf DESTINATION include)

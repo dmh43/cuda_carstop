@@ -4,20 +4,19 @@ target_link_libraries(gtest ${CMAKE_THREAD_LIBS_INIT})
 
 set(test_src
   run_all.cc
-  matrix_test.cc
-  matrix_mult_test.cc
+  pf_test.cc
 )
 
-add_executable(deepgreen_tests ${test_src})
+add_executable(pf_tests ${test_src})
 
-target_link_libraries(deepgreen_tests
+target_link_libraries(pf_tests
   gtest
-  deepgreen
+  pf
   ${CMAKE_THREAD_LIBS_INIT}
   ${MATH_LIBS}
 )
 
 add_test(
   NAME tests
-  COMMAND deepgreen_tests
+  COMMAND pf_tests
 )

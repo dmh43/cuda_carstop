@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
-project(deepgreen)
+project(pf)
 
 # Set build type to RELEASE by default:
 if (NOT CMAKE_BUILD_TYPE)
