@@ -21,7 +21,7 @@ __device__ float* vec_subtract(float* vec1, float* vec2, int length) {
     return result;
 }
 
-__global__ void vec_mutate_divide(float* vec, float divisor, int length) {
+__device__ void vec_mutate_divide(float* vec, float divisor, int length) {
     for (int vector_index = 0; vector_index < length; vector_index++) {
         vec[vector_index] = vec[vector_index] / divisor;
     }
@@ -63,7 +63,7 @@ __device__ float calc_norm_squared_in(float* vec, float* mat, int vec_length) {
     return result;
 }
 
-__global__ void vec_mutate_add(float* vec1, float* vec2, int length) {
+__device__ void vec_mutate_add(float* vec1, float* vec2, int length) {
     for (int vector_index = 0; vector_index < length; vector_index++) {
         vec1[vector_index] += vec2[vector_index];
     }
@@ -86,7 +86,7 @@ __device__ float* random_normal_vector(int length) {
     return result;
 }
 
-__global__ void add_noise(float* vec, float* noise_covariance_sqrt, int length) {
+__device__ void add_noise(float* vec, float* noise_covariance_sqrt, int length) {
     float* random = random_normal_vector(length);
     float* first_result = mat_vec_mul(noise_covariance_sqrt, random, length, length);
     vec_mutate_add(vec, first_result, length);
@@ -105,7 +105,7 @@ __device__ float calc_unnormalized_importance_weight(systemModel model, float* c
     return unnormalized_weight;
 }
 
-__global__ void update_importance_weights(float* weights, systemModel model, float* current_measurement, float* particles, int num_particles) {
+__device__ void update_importance_weights(float* weights, systemModel model, float* current_measurement, float* particles, int num_particles) {
     for (int weight_index = 0; weight_index < num_particles; weight_index++) {
         float* current_state_estimate = &particles[weight_index * model.num_state_variables];
         weights[weight_index] = calc_unnormalized_importance_weight(model,
@@ -115,7 +115,7 @@ __global__ void update_importance_weights(float* weights, systemModel model, flo
     vec_mutate_divide(weights, sum(weights, num_particles), num_particles);
 }
 
-__global__ void update_estimates(float* estimate, float* weights, float* particles, int num_particles, int num_state_variables) {
+__device__ void update_estimates(float* estimate, float* weights, float* particles, int num_particles, int num_state_variables) {
     for (int variable_index = 0; variable_index < num_state_variables; variable_index++) {
         estimate[variable_index] = 0;
         for (int weight_index = 0; weight_index < num_particles; weight_index++) {
@@ -142,7 +142,7 @@ __device__ float* resample_particles(float* particles, float* weights, int num_p
     return resampled_particles;
 }
 
-__global__ void predict_particles_step(systemModel model, float* particles, int num_particles) {
+__device__ void predict_particles_step(systemModel model, float* particles, int num_particles) {
     for (int particle_index = 0; particle_index < num_particles * model.num_state_variables; particle_index += model.num_state_variables) {
         float* particle = &particles[particle_index];
         float* process_estimate = model.step_process(particle);
