@@ -89,7 +89,7 @@ __device__ void add_noise(float* vec,
                           float* noise_covariance_sqrt,
                           int length,
                           curandState* state) {
-    float* random = random_normal_vector(length);
+    float* random = random_normal_vector(length, state);
     float* first_result = mat_vec_mul(noise_covariance_sqrt, random, length, length);
     vec_mutate_add(vec, first_result, length);
     free(first_result);
@@ -140,11 +140,11 @@ __device__ float* resample_particles(float* particles,
                                      float* weights,
                                      int num_particles,
                                      int num_state_variables,
-                                     curandState* state) {
+                                     curandState* states) {
     float* resampled_particles = alloc_float(num_particles * num_state_variables);
     float* reference = cumsum(weights, num_particles);
     for (int weight_index = 0; weight_index < num_particles; weight_index++) {
-        float uniform_sample = (weight_index + curand_uniform(state)) / num_particles;
+        float uniform_sample = (weight_index + curand_uniform(&states[weight_index])) / num_particles;
         int sum_index = 0;
         while (reference[sum_index] < uniform_sample) {
             sum_index++;
@@ -189,15 +189,15 @@ __global__ void pf(float* estimates,
                      int num_samples,
                      int num_particles,
                      curandState* states) {
-    float* particles = initialize_particles(model, num_particles, state);
+    float* particles = initialize_particles(model, num_particles, states);
     float* weights = alloc_float(num_particles);
     // float* estimates = alloc_float(num_samples * model.num_state_variables);
     for (int sample_index = 0; sample_index < num_samples; sample_index++) {
         float* current_measurement = &measurements[sample_index * model.num_measurement_variables];
         update_importance_weights(weights, model, current_measurement, particles, num_particles);
         update_estimates(&estimates[sample_index * model.num_state_variables], weights, particles, num_particles, model.num_state_variables);
-        particles = resample_particles(particles, weights, num_particles, model.num_state_variables, &states[particle_index]);
-        predict_particles_step(model, particles, num_particles, &states[particle_index]);
+        particles = resample_particles(particles, weights, num_particles, model.num_state_variables, states);
+        predict_particles_step(model, particles, num_particles, states);
     }
     free(weights);
     free(particles);
