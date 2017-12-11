@@ -1,3 +1,6 @@
+#include <curand.h>
+#include <curand_kernel.h>
+
 #define len(coll_ptr) (sizeof(coll_ptr)/sizeof(coll_ptr[0]))
 #define alloc_float(num_elems) ((float*) malloc(num_elems * sizeof(float)))
 #define rand_f() ((float)rand()/(float)(RAND_MAX))
