@@ -1,6 +1,8 @@
 #include <limits.h>
 #include <math.h>
 #include "gtest/gtest.h"
+#include <curand.h>
+#include <curand_kernel.h>
 
 #include "../include/pf/pf_support.cuh"
 
@@ -123,11 +125,13 @@ namespace {
 
 
     TEST(AddNoise, Any) {
+        curandState* state;
+        curand_init(1234, id, 0, state)
         float vec[] = {2.0f, 3.0f, 5.0f};
         float noise_cov_sqrt[] = {sqrt(0.1f), 0.0f, 0.0f,
                                   0.0f, sqrt(0.1f), 0.0f,
                                   0.0f, 0.0f, sqrt(0.1f)};
-        add_noise(vec, noise_cov_sqrt, 3);
+        add_noise(vec, noise_cov_sqrt, 3, state);
         EXPECT_LT(vec[0], 3.0);
         EXPECT_GT(vec[0], 1.0);
         EXPECT_LT(vec[1], 4.0);
@@ -138,13 +142,15 @@ namespace {
 
 
     TEST(Resample, Any) {
+        curandState* state;
+        curand_init(1234, id, 0, state)
         float* particles = alloc_float(4);
         particles[0] = 2.0f;
         particles[1] = 3.0f;
         particles[2] = 5.0f;
         particles[3] = 1.0f;
         float weights[] = {0.3f, 0.7f};
-        float* resampled_particles = resample_particles(particles, weights, 2, 2);
+        float* resampled_particles = resample_particles(particles, weights, 2, 2, state);
         EXPECT_TRUE(resampled_particles != particles);
     }
 
