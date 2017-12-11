@@ -8,11 +8,12 @@ set(test_src
   pf_test.cc
 )
 
-add_executable(pf_tests ${test_src})
+cuda_add_executable(pf_tests ${test_src})
 
 target_link_libraries(pf_tests
   gtest
   pf
+  ${CUDA_CUBLAS_LIBRARIES}
   ${CMAKE_THREAD_LIBS_INIT}
   ${MATH_LIBS}
 )

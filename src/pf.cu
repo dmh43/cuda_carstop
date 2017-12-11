@@ -7,6 +7,7 @@
 #include <curand_kernel.h>
 
 #include "pf/pf.cuh"
+#include "pf/pf_support.cuh"
 
 #define CUDA_CALL(x) do { if ((x) != cudaSuccess) {                     \
             cout << " Error at " << __FILE__ << ":" << __LINE__ << endl; \
