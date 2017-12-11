@@ -2,7 +2,7 @@
 #include <math.h>
 #include "gtest/gtest.h"
 
-#include "../include/pf/pf.cuh"
+#include "../include/pf/pf_support.cuh"
 
 namespace {
 
