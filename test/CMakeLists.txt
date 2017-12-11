@@ -4,6 +4,7 @@ target_link_libraries(gtest ${CMAKE_THREAD_LIBS_INIT})
 
 set(test_src
   run_all.cc
+  test_helper.cu
   pf_test.cc
 )
 
