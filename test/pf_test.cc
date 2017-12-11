@@ -27,6 +27,13 @@ namespace {
         return acc;
     }
 
+    TEST(InnerProductTest, NormSquaredTESTEERR) {
+        float vec1[2] = {1.0f, 2.0f};
+        float vec2[2] = {1.0f, 2.0f};
+        EXPECT_EQ(5, 2);
+    }
+
+
     TEST(InnerProductTest, NormSquared) {
         float vec1[2] = {1.0f, 2.0f};
         float vec2[2] = {1.0f, 2.0f};
@@ -149,7 +156,6 @@ namespace {
         particles[1] = 3.0f;
         particles[2] = 5.0f;
         particles[3] = 1.0f;
-        printf("%f\n", curand_normal(state));
         float weights[] = {0.3f, 0.7f};
         float* resampled_particles = resample_particles(particles, weights, 2, 2, state);
         EXPECT_TRUE(resampled_particles != particles);
