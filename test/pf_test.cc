@@ -1,7 +1,6 @@
 #include <limits.h>
 #include <math.h>
 #include "gtest/gtest.h"
-#include "gmock/gmock.h"
 
 #include "../include/pf/pf.cuh"
 
