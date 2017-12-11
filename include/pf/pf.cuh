@@ -16,40 +16,40 @@ typedef struct systemModel {
     float_p_float_p_fptr step_process;
 } systemModel;
 
-float inner_product(float* vec1, float* vec2, int length);
+auto float inner_product(float* vec1, float* vec2, int length);
 
-float* vec_subtract(float* vec1, float* vec2, int length);
+auto float* vec_subtract(float* vec1, float* vec2, int length);
 
-float* mat_vec_mul(float* mat, float* vec, int input_length, int result_length);
+auto float* mat_vec_mul(float* mat, float* vec, int input_length, int result_length);
 
-float calc_norm_squared_in(float* vec, float* mat, int vec_length);
+auto float calc_norm_squared_in(float* vec, float* mat, int vec_length);
 
-void update_particle(systemModel model, float* current_state_estimate, float* current_measurement);
+auto void update_particle(systemModel model, float* current_state_estimate, float* current_measurement);
 
-void vec_mutate_divide(float* vec, float divisor, int length);
+auto void vec_mutate_divide(float* vec, float divisor, int length);
 
-float sum(float* vec, int length);
+auto float sum(float* vec, int length);
 
-float* cumsum(float* vec, int length);
+auto float* cumsum(float* vec, int length);
 
-void vec_mutate_add(float* vec1, float* vec2, int length);
+auto void vec_mutate_add(float* vec1, float* vec2, int length);
 
-float normal_rand();
+auto float normal_rand();
 
-float* random_normal_vector(int length, curandState* state);
+auto float* random_normal_vector(int length, curandState* state);
 
-void add_noise(float* vec, float* noise_covariance_sqrt, int length, curandState* state);
+auto void add_noise(float* vec, float* noise_covariance_sqrt, int length, curandState* state);
 
-float calc_unnormalized_importance_weight(systemModel model, float* current_state_estimate, float* current_measurement);
+auto float calc_unnormalized_importance_weight(systemModel model, float* current_state_estimate, float* current_measurement);
 
-void update_importance_weights(float* weights, systemModel model, float* current_measurement, float* particles, int num_particles);
+auto void update_importance_weights(float* weights, systemModel model, float* current_measurement, float* particles, int num_particles);
 
-void update_estimates(float* estimate, float* weights, float* particles, int num_particles, int num_state_variables);
+auto void update_estimates(float* estimate, float* weights, float* particles, int num_particles, int num_state_variables);
 
-float* resample_particles(float* particles, float* weights, int num_particles, int num_state_variables, curandState* state);
+auto float* resample_particles(float* particles, float* weights, int num_particles, int num_state_variables, curandState* state);
 
-void predict_particles_step(systemModel model, float* particles, int num_particles, curandState* states);
+auto void predict_particles_step(systemModel model, float* particles, int num_particles, curandState* states);
 
-float* initialize_particles(systemModel model, int num_particles, curandState* state);
+auto float* initialize_particles(systemModel model, int num_particles, curandState* state);
 
-void pf(float* estimates, float* measurements, systemModel model, int num_samples, int num_particles, curandState* states);
+auto void pf(float* estimates, float* measurements, systemModel model, int num_samples, int num_particles, curandState* states);
