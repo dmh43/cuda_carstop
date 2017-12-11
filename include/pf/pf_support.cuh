@@ -7,6 +7,7 @@
 
 typedef float* (*float_p_float_p_fptr)(float*);
 
+#pragma once
 typedef struct systemModel {
     int num_state_variables;
     int num_measurement_variables;
