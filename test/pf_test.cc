@@ -6,6 +6,7 @@
 #include <curand_kernel.h>
 
 #include "../include/pf/pf_support.cuh"
+#include "test_helper.cuh"
 
 namespace {
 
@@ -28,26 +29,10 @@ namespace {
         return acc;
     }
 
-    void inner_product_kernel(float* vec1, float* vec2, int length, float* result) {
-        *result = inner_product(vec1, vec2, length);
-    }
-
-    float gpu_inner_product(float* vec1, float* vec2, int length) {
-        float *gpu_vec1, *gpu_vec2, *result;
-        int size = sizeof(float) * length;
-        cudaMalloc(&gpu_vec1, size);
-        cudaMalloc(&gpu_vec2, size);
-        cudaMalloc(&result, sizeof(float));
-        cudaMemcpy(gpu_vec1, vec1, size, cudaMemcpyHostToDevice);
-        cudaMemcpy(gpu_vec2, vec2, size, cudaMemcpyHostToDevice);
-        inner_product_kernel<<<1, 1>>>(gpu_vec1, gpu_vec2, length, result);
-        return *result;
-    }
-
-    TEST(InnerProductTest, NormSquared) {
+    TEST(GPUInnerProductTest, NormSquared) {
         float vec1[2] = {1.0f, 2.0f};
         float vec2[2] = {1.0f, 2.0f};
-        EXPECT_EQ(5, inner_product(vec1, vec2, 2));
+        EXPECT_EQ(5, gpu_inner_product(vec1, vec2, 2));
     }
 
     TEST(InnerProductTest, Any) {
