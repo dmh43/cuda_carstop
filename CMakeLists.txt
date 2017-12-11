@@ -26,10 +26,17 @@ find_package(Math)
 
 include_directories(. include ${Boost_INCLUDE_DIRS} ${CUDA_INCLUDE_DIRS})
 
+# set(
+#     CUDA_NVCC_FLAGS
+#     ${CUDA_NVCC_FLAGS}
+#     -O0 --debug --device-c -gencode arch=compute_30,code=sm_30
+#     )
+
+
 set(
     CUDA_NVCC_FLAGS
-    ${CUDA_NVCC_FLAGS};
-    -O0 --debug --device-c -gencode arch=compute_30,code=sm_30
+    ${CUDA_NVCC_FLAGS}
+    -O0 --debug -gencode arch=compute_30,code=sm_30
     )
 
 # if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
