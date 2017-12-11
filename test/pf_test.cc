@@ -149,6 +149,7 @@ namespace {
         particles[1] = 3.0f;
         particles[2] = 5.0f;
         particles[3] = 1.0f;
+        printf("%f\n", curand_normal(stat));
         float weights[] = {0.3f, 0.7f};
         float* resampled_particles = resample_particles(particles, weights, 2, 2, state);
         EXPECT_TRUE(resampled_particles != particles);
