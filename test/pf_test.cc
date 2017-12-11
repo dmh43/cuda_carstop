@@ -126,7 +126,7 @@ namespace {
 
     TEST(AddNoise, Any) {
         curandState* state;
-        curand_init(1234, id, 0, state)
+        curand_init(1234, 0, 0, state)
         float vec[] = {2.0f, 3.0f, 5.0f};
         float noise_cov_sqrt[] = {sqrt(0.1f), 0.0f, 0.0f,
                                   0.0f, sqrt(0.1f), 0.0f,
@@ -143,7 +143,7 @@ namespace {
 
     TEST(Resample, Any) {
         curandState* state;
-        curand_init(1234, id, 0, state)
+        curand_init(1234, 0, 0, state)
         float* particles = alloc_float(4);
         particles[0] = 2.0f;
         particles[1] = 3.0f;
