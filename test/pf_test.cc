@@ -1,6 +1,7 @@
 #include <limits.h>
 #include <math.h>
 #include "gtest/gtest.h"
+#include <cuda.h>
 #include <curand.h>
 #include <curand_kernel.h>
 
@@ -27,12 +28,20 @@ namespace {
         return acc;
     }
 
-    TEST(InnerProductTest, NormSquaredTESTEERR) {
-        float vec1[2] = {1.0f, 2.0f};
-        float vec2[2] = {1.0f, 2.0f};
-        EXPECT_EQ(5, 2);
+    void inner_product_kernel(float* vec1, float* vec2, int length, float* result) {
+        result* = inner_product(vec1, vec2, length);
     }
 
+    float gpu_inner_product(float* vec1, float* vec2, int length) {
+        float *gpu_vec1, *gpu_vec2, *result;
+        int size = sizeof(float) * length;
+        cudaMalloc(&gpu_vec1, size);
+        cudaMalloc(&gpu_vec2, size);
+        cudaMemcpy(gpu_vec1, vec1, size, cudaMemcpyHostToDevice);
+        cudaMemcpy(gpu_vec2, vec2, size, cudaMemcpyHostToDevice);
+        inner_product_kernel<<<1, 1>>>(gpu_vec1, gpu_vec2, length, result);
+        return result*;
+    }
 
     TEST(InnerProductTest, NormSquared) {
         float vec1[2] = {1.0f, 2.0f};
