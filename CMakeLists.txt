@@ -29,24 +29,24 @@ include_directories(. include ${Boost_INCLUDE_DIRS} ${CUDA_INCLUDE_DIRS})
 set(
     CUDA_NVCC_FLAGS
     ${CUDA_NVCC_FLAGS};
-    -O3 --device-c -gencode arch=compute_30,code=sm_30
+    -O0 --debug --device-c -gencode arch=compute_30,code=sm_30
     )
 
-if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
-  include(CheckCXXCompilerFlag)
-  check_cxx_compiler_flag(-std=c++11 HAVE_FLAG_CXX_11)
-  if (HAVE_FLAG_CXX_11)
-    set(CMAKE_CXX_FLAGS "-Wall -std=c++11 ${CMAKE_CXX_FLAGS}")
-  else ()
-    message(FATAL_ERROR "Gorram! Your compiler is too frakking old. C++11 support is required.")
-  endif ()
-  set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
-  set(CMAKE_CXX_FLAGS_DEBUG "-g -pedantic -fno-omit-frame-pointer -fno-inline-functions")
-endif ()
+# if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
+#   include(CheckCXXCompilerFlag)
+#   check_cxx_compiler_flag(-std=c++11 HAVE_FLAG_CXX_11)
+#   if (HAVE_FLAG_CXX_11)
+#     set(CMAKE_CXX_FLAGS "-Wall -std=c++11 ${CMAKE_CXX_FLAGS}")
+#   else ()
+#     message(FATAL_ERROR "Gorram! Your compiler is too frakking old. C++11 support is required.")
+#   endif ()
+#   set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
+#   set(CMAKE_CXX_FLAGS_DEBUG "-g -pedantic -fno-omit-frame-pointer -fno-inline-functions")
+# endif ()
 
-if (Sanitize)
-  set(CMAKE_CXX_FLAGS "-fsanitize=address -fsanitize=undefined ${CMAKE_CXX_FLAGS}")
-endif ()
+# if (Sanitize)
+#   set(CMAKE_CXX_FLAGS "-fsanitize=address -fsanitize=undefined ${CMAKE_CXX_FLAGS}")
+# endif ()
 
 add_subdirectory(src)
 
@@ -65,7 +65,7 @@ message(STATUS "  Build tests          : ${BuildTest}")
 message(STATUS "  Sanitize flags       : ${Sanitize}")
 message(STATUS "  FoundCUDA            : ${CUDA_FOUND}")
 message(STATUS "  Boost include dirs   : ${Boost_INCLUDE_DIRS}")
-message(STATUS "  CXX_FLAGS            : ${CMAKE_CXX_FLAGS}")
+# message(STATUS "  CXX_FLAGS            : ${CMAKE_CXX_FLAGS}")
 if ("${CMAKE_BUILD_TYPE}" STREQUAL "RELEASE")
   message(STATUS "  CXX_FLAGS_RELEASE    : ${CMAKE_CXX_FLAGS_RELEASE}")
 elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "DEBUG")
