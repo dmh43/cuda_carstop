@@ -35,7 +35,7 @@ CPPFLAGS += -isystem $(GTEST_DIR)/include
 CXXFLAGS += -g -Wall -Wextra -pthread --std=c++11
 
 # Flags passed to nvcc compiler.
-NVCCFLAGS += -g -arch=sm_30 --std=c++11 --expt-extended-lambda
+NVCCFLAGS += -g -arch=sm_30 --device-c --std=c++11 --expt-extended-lambda
 
 # All tests produced by this Makefile.  Remember to add new tests you
 # created to the list.
