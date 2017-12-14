@@ -78,8 +78,8 @@ gtest_main.a : gtest-all.o gtest_main.o
 
 # Build tests
 
-pf.o : $(SRC_DIR)/pf.cu $(INCLUDE_DIR)/pf/pf.cuh $(GMOCK_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(SRC_DIR)/pf.cuh
+pf.o : $(SRC_DIR)/pf.cu $(INCLUDE_DIR)/pf/pf.cuh
+	nvcc $(CPPFLAGS) $(NVCCFLAGS) -I$(TEST_DIR) -I$(SRC_DIR) -I$(INCLUDE_DIR) -I$(CUDA_DIR)/include $^ -c -o $@
 
 test_pf.o: $(TEST_DIR)/pf_test.cu $(INCLUDE_DIR/pf.cuh)
 	nvcc $(CPPFLAGS) $(NVCCFLAGS) -I$(TEST_DIR) -I$(SRC_DIR) -I$(INCLUDE_DIR) -I$(CUDA_DIR)/include $^ -c -o $@
