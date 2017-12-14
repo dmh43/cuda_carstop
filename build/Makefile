@@ -21,7 +21,8 @@ endif
 # Points to the root of Google Test, relative to where this file is.
 # Remember to tweak this if you move this file.
 GTEST_DIR = ../googletest
-PF_DIR = ../src
+SRC_DIR = ../src
+INCLUDE_DIR = ../include/pf
 TEST_DIR = ../test
 CUDA_DIR := /usr/local/cuda
 
@@ -77,8 +78,8 @@ gtest_main.a : gtest-all.o gtest_main.o
 
 # Build tests
 
-test_pf.o: $(TEST_DIR)/pf_test.cc $(PF_DIR)/pf.h
-	nvcc -x cu $(CPPFLAGS) $(NVCCFLAGS) -I$(TEST_DIR) -I$(PF_DIR) -I$(CUDA_DIR)/include $^ -c -o $@
+test_pf.o: $(TEST_DIR)/pf_test.cc
+	nvcc -x cu $(CPPFLAGS) $(NVCCFLAGS) -I$(TEST_DIR) -I$(SRC_DIR) -I$(INCLUDE_DIR) -I$(CUDA_DIR)/include $^ -c -o $@
 
 test_device: $(TESTS_DEVICE:=.o) gtest_main.a
 	nvcc $^ gtest_main.a -lpthread $(LIB_FLAGS) -o $@
