@@ -78,7 +78,7 @@ gtest_main.a : gtest-all.o gtest_main.o
 # Build tests
 
 test_pf.o: ../test/pf_test.cc
-	nvcc -x cu $(CPPFLAGS) $(NVCCFLAGS) -I$(PF_DIR) -I$(CUDA_DIR)/include $^ -c -o $@
+	nvcc -x cu $(CPPFLAGS) $(NVCCFLAGS) -I$(TEST_DIR) -I$(PF_DIR) -I$(CUDA_DIR)/include $^ -c -o $@
 
 test_device: $(TESTS_DEVICE:=.o) gtest_main.a
 	nvcc $^ gtest_main.a -lpthread $(LIB_FLAGS) -o $@
