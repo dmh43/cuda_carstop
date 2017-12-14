@@ -6,6 +6,7 @@
 #include <curand_kernel.h>
 
 #include "test_helper.cuh"
+#include "pf/pf_support.cuh"
 
 namespace {
 
