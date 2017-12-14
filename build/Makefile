@@ -77,8 +77,25 @@ gtest_main.a : gtest-all.o gtest_main.o
 
 # Build tests
 
-test_pf.o: ../test/pf_test.cc
+test_pf.o: $(TEST_DIR)/pf_test.cc $(PF_DIR)/pf.h
 	nvcc -x cu $(CPPFLAGS) $(NVCCFLAGS) -I$(TEST_DIR) -I$(PF_DIR) -I$(CUDA_DIR)/include $^ -c -o $@
 
 test_device: $(TESTS_DEVICE:=.o) gtest_main.a
 	nvcc $^ gtest_main.a -lpthread $(LIB_FLAGS) -o $@
+
+# pf.o : $(USER_DIR)/pf.cc $(USER_DIR)/pf.h $(GMOCK_HEADERS)
+# 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/pf.cc
+
+# pf_test.o : $(TEST_DIR)/pf_test.cc \
+# 		$(USER_DIR)/pf.h $(GMOCK_HEADERS)
+# 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(TEST_DIR)/pf_test.cc
+
+# pf_test : pf.o pf_test.o gmock_main.a
+# 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
+
+
+# demo.o : $(USER_DIR)/demo.cc $(USER_DIR)/demo.h
+# 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/demo.cc
+
+# demo : demo.o pf.o
+# 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
