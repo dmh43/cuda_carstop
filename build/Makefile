@@ -22,7 +22,7 @@ endif
 # Remember to tweak this if you move this file.
 GTEST_DIR = ../googletest
 SRC_DIR = ../src
-INCLUDE_DIR = ../include/pf
+INCLUDE_DIR = ../include
 TEST_DIR = ../test
 CUDA_DIR := /usr/local/cuda
 
