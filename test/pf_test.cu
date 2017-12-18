@@ -42,7 +42,7 @@ namespace {
         cudaMemcpy(gpu_vec1, vec1, size, cudaMemcpyHostToDevice);
         cudaMemcpy(gpu_vec2, vec2, size, cudaMemcpyHostToDevice);
         vec_subtract_kernel<<<1, 1>>>(gpu_vec1, gpu_vec2, length, result_dev);
-        cudaMemcpy(result_host, result_dev, size, cudaMemcpyDeviceToHost);
+        cudaMemcpy(result_host, *result_dev, size, cudaMemcpyDeviceToHost);
         printf("%f\n", result_host[0]);
         printf("%f\n", result_host[1]);
         return result_host;
