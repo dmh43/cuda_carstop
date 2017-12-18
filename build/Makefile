@@ -95,7 +95,7 @@ test_pf.o : $(TEST_DIR)/pf_test.cu \
 	nvcc $(CPPFLAGS) $(NVCCFLAGS) $(CXXFLAGS) -c $(SRC_DIR)/pf_test.cu
 
 test_device : pf.o test_pf.o gtest_main.a
-	nvcc $(CPPFLAGS) $(NVCCFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
+	nvcc -arch=sm_30 -lpthread $^ -o $@
 
 # pf.o : $(USER_DIR)/pf.cc $(USER_DIR)/pf.h $(GMOCK_HEADERS)
 # 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/pf.cc
