@@ -13,7 +13,7 @@ namespace {
         *result = inner_product(vec1, vec2, length);
     }
 
-    float gpu_inner_product(float* vec1, float* vec2, int length) {
+    float run_kernel_inner_product(float* vec1, float* vec2, int length) {
         float *gpu_vec1, *gpu_vec2, *result_dev, *result_host;
         int size = sizeof(float) * length;
         cudaMalloc((void**) &gpu_vec1, sizeof(float) * 2);
@@ -49,20 +49,20 @@ namespace {
     TEST(GPUInnerProductTest, NormSquared) {
         float vec1[2] = {1.0f, 2.0f};
         float vec2[2] = {1.0f, 2.0f};
-        EXPECT_EQ(5, gpu_inner_product(vec1, vec2, 2));
+        EXPECT_EQ(5, run_kernel_inner_product(vec1, vec2, 2));
     }
 
-    // TEST(InnerProductTest, Any) {
-    //     float vec1[2] = {3.0f, 5.0f};
-    //     float vec2[2] = {1.0f, 2.0f};
-    //     EXPECT_EQ(13, inner_product(vec1, vec2, 2));
-    // }
+    TEST(InnerProductTest, Any) {
+        float vec1[2] = {3.0f, 5.0f};
+        float vec2[2] = {1.0f, 2.0f};
+        EXPECT_EQ(13, run_kernel_inner_product(vec1, vec2, 2));
+    }
 
-    // TEST(InnerProductTest, Orthogonal) {
-    //     float vec1[2] = {-1.0f, 1.0f};
-    //     float vec2[2] = {1.0f, 1.0f};
-    //     EXPECT_EQ(0, inner_product(vec1, vec2, 2));
-    // }
+    TEST(InnerProductTest, Orthogonal) {
+        float vec1[2] = {-1.0f, 1.0f};
+        float vec2[2] = {1.0f, 1.0f};
+        EXPECT_EQ(0, run_kernel_inner_product(vec1, vec2, 2));
+    }
 
 
     // TEST(VecSubtractTest, Any) {
