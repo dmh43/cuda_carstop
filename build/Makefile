@@ -95,8 +95,7 @@ pf_test.o : $(TEST_DIR)/pf_test.cu \
 	nvcc $(CPPFLAGS) $(NVCCFLAGS) -I$(GTEST_DIR) -I$(SRC_DIR) -I$(INCLUDE_DIR) -I$(CUDA_DIR)/include -c $(TEST_DIR)/pf_test.cu
 
 test_device : pf.o pf_test.o gtest_main.a
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
-	# nvcc -arch=sm_30 -lpthread $^ -o $@
+	nvcc -isystem $(GTEST_DIR)/include -arch=sm_30 -lpthread $^ -o $@
 
 # pf.o : $(USER_DIR)/pf.cc $(USER_DIR)/pf.h $(GMOCK_HEADERS)
 # 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/pf.cc
