@@ -22,7 +22,7 @@ namespace {
         cudaMemcpy(gpu_vec1, vec1, size, cudaMemcpyHostToDevice);
         cudaMemcpy(gpu_vec2, vec2, size, cudaMemcpyHostToDevice);
         inner_product_kernel<<<1, 1>>>(gpu_vec1, gpu_vec2, length, result);
-        return 1.0f;
+        return *result;
     }
 
     float* estimate_measurement(float* vec) {
