@@ -17,12 +17,13 @@ namespace {
         float *gpu_vec1, *gpu_vec2, *result;
         int size = sizeof(float) * length;
         printf("therrkkk");
-        // cudaMalloc((void**) &gpu_vec1, sizeof(float) * 2);
+        cudaMalloc((void**) &gpu_vec1, sizeof(float) * 2);
         // cudaMalloc((void**) &gpu_vec2, size);
         // cudaMalloc((void**) &result, sizeof(float));
         // cudaMemcpy(gpu_vec1, vec1, size, cudaMemcpyHostToDevice);
         // cudaMemcpy(gpu_vec2, vec2, size, cudaMemcpyHostToDevice);
         // inner_product_kernel<<<1, 1>>>(gpu_vec1, gpu_vec2, length, result);
+        *result = 2;
         return *result;
     }
 
