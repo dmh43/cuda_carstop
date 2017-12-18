@@ -10,7 +10,9 @@
 namespace {
 
     __global__ void inner_product_kernel(float* vec1, float* vec2, int length, float* result) {
-        *result = inner_product(vec1, vec2, length);
+        float* val;
+        *val = inner_product(vec1, vec2, length);
+        cudaMemcpy(result, val, sizeof(float), cudaMemcpyDeviceToHost);
     }
 
     float gpu_inner_product(float* vec1, float* vec2, int length) {
