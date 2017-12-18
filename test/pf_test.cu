@@ -17,7 +17,7 @@ namespace {
         float *gpu_vec1, *gpu_vec2, *result;
         int size = sizeof(float) * length;
         printf("therrkkk");
-        cudaMalloc((void**) &gpu_vec1, size);
+        cudaMalloc((void**) &gpu_vec1, sizeof(float) * 2);
         // cudaMalloc((void**) &gpu_vec2, size);
         // cudaMalloc((void**) &result, sizeof(float));
         // cudaMemcpy(gpu_vec1, vec1, size, cudaMemcpyHostToDevice);
