@@ -44,11 +44,11 @@ namespace {
         return acc;
     }
 
-    // TEST(GPUInnerProductTest, NormSquared) {
-    //     float vec1[2] = {1.0f, 2.0f};
-    //     float vec2[2] = {1.0f, 2.0f};
-    //     EXPECT_EQ(5, gpu_inner_product(vec1, vec2, 2));
-    // }
+    TEST(GPUInnerProductTest, NormSquared) {
+        float vec1[2] = {1.0f, 2.0f};
+        float vec2[2] = {1.0f, 2.0f};
+        // EXPECT_EQ(5, gpu_inner_product(vec1, vec2, 2));
+    }
 
     // TEST(InnerProductTest, Any) {
     //     float vec1[2] = {3.0f, 5.0f};
