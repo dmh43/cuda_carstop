@@ -16,7 +16,7 @@ namespace {
     float run_kernel_inner_product(float* vec1, float* vec2, int length) {
         float *gpu_vec1, *gpu_vec2, *result_dev, *result_host;
         int size = sizeof(float) * length;
-        cudaMalloc((void**) &gpu_vec1, sizeof(float) * 2);
+        cudaMalloc((void**) &gpu_vec1, size);
         cudaMalloc((void**) &gpu_vec2, size);
         cudaMalloc((void**) &result_dev, sizeof(float));
         result_host = (float*) malloc(sizeof(float));
@@ -35,14 +35,14 @@ namespace {
     float* run_kernel_vec_subtract(float* vec1, float* vec2, int length) {
         float *gpu_vec1, *gpu_vec2, *result_dev, *result_host;
         int size = sizeof(float) * length;
-        cudaMalloc((void**) &gpu_vec1, sizeof(float) * 2);
+        cudaMalloc((void**) &gpu_vec1, size);
         cudaMalloc((void**) &gpu_vec2, size);
-        cudaMalloc((void**) &result_dev, sizeof(float));
-        result_host = (float*) malloc(sizeof(float) * length);
+        cudaMalloc((void**) &result_dev, size);
+        result_host = (float*) malloc(size);
         cudaMemcpy(gpu_vec1, vec1, size, cudaMemcpyHostToDevice);
         cudaMemcpy(gpu_vec2, vec2, size, cudaMemcpyHostToDevice);
         vec_subtract_kernel<<<1, 1>>>(gpu_vec1, gpu_vec2, length, result_dev);
-        cudaMemcpy(result_host, result_dev, sizeof(float) * length, cudaMemcpyDeviceToHost);
+        cudaMemcpy(result_host, result_dev, size, cudaMemcpyDeviceToHost);
         return result_host;
     }
 
