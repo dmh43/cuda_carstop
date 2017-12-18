@@ -19,12 +19,12 @@ namespace {
         cudaMalloc((void**) &gpu_vec1, sizeof(float) * 2);
         cudaMalloc((void**) &gpu_vec2, size);
         cudaMalloc((void**) &result_dev, sizeof(float));
+        malloc((void**) &result_host, sizeof(float));
         cudaMemcpy(gpu_vec1, vec1, size, cudaMemcpyHostToDevice);
         cudaMemcpy(gpu_vec2, vec2, size, cudaMemcpyHostToDevice);
         inner_product_kernel<<<1, 1>>>(gpu_vec1, gpu_vec2, length, result_dev);
-        // cudaMemcpy(result_host, result_dev, sizeof(float), cudaMemcpyDeviceToHost);
-        // return *result_host;
-        return 100.0f;
+        cudaMemcpy(result_host, result_dev, sizeof(float), cudaMemcpyDeviceToHost);
+        return *result_host;
     }
 
     float* estimate_measurement(float* vec) {
