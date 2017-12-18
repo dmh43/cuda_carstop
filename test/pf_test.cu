@@ -10,21 +10,20 @@
 namespace {
 
     __global__ void inner_product_kernel(float* vec1, float* vec2, int length, float* result) {
-        float* val;
-        *val = inner_product(vec1, vec2, length);
-        cudaMemcpy(result, val, sizeof(float), cudaMemcpyDeviceToHost);
+        *result = inner_product(vec1, vec2, length);
     }
 
     float gpu_inner_product(float* vec1, float* vec2, int length) {
-        float *gpu_vec1, *gpu_vec2, *result;
+        float *gpu_vec1, *gpu_vec2, *result_dev, *result_host;
         int size = sizeof(float) * length;
         cudaMalloc((void**) &gpu_vec1, sizeof(float) * 2);
         cudaMalloc((void**) &gpu_vec2, size);
-        cudaMalloc((void**) &result, sizeof(float));
+        cudaMalloc((void**) &result_dev, sizeof(float));
         cudaMemcpy(gpu_vec1, vec1, size, cudaMemcpyHostToDevice);
         cudaMemcpy(gpu_vec2, vec2, size, cudaMemcpyHostToDevice);
-        inner_product_kernel<<<1, 1>>>(gpu_vec1, gpu_vec2, length, result);
-        return *result;
+        inner_product_kernel<<<1, 1>>>(gpu_vec1, gpu_vec2, length, result_dev);
+        cudaMemcpy(result_host, result_dev, sizeof(float), cudaMemcpyDeviceToHost);
+        return *result_host;
     }
 
     float* estimate_measurement(float* vec) {
