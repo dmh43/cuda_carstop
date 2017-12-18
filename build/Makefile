@@ -90,11 +90,11 @@ gtest_main.a : gtest-all.o gtest_main.o
 pf.o : $(SRC_DIR)/pf.cu $(INCLUDE_DIR)/pf/pf.cuh $(GTEST_HEADERS)
 	nvcc $(CPPFLAGS) $(NVCCFLAGS) -I$(SRC_DIR) -I$(INCLUDE_DIR) -I$(CUDA_DIR)/include -c $(SRC_DIR)/pf.cu
 
-test_pf.o : $(TEST_DIR)/pf_test.cu \
+pf_test.o : $(TEST_DIR)/pf_test.cu \
 		$(INCLUDE_DIR)/pf/pf.cuh $(GTEST_HEADERS)
 	nvcc $(CPPFLAGS) $(NVCCFLAGS) -I$(GTEST_DIR) -I$(SRC_DIR) -I$(INCLUDE_DIR) -I$(CUDA_DIR)/include -c $(TEST_DIR)/pf_test.cu
 
-test_device : pf.o test_pf.o gtest_main.a
+test_device : pf.o pf_test.o gtest_main.a
 	nvcc -arch=sm_30 -lpthread $^ -o $@
 
 # pf.o : $(USER_DIR)/pf.cc $(USER_DIR)/pf.h $(GMOCK_HEADERS)
