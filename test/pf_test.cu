@@ -28,12 +28,12 @@ namespace {
     }
 
 
-    __global__ void vec_subtract_kernel(float* vec1, float* vec2, int length, float* result) {
-        result = vec_subtract(vec1, vec2, length);
+    __global__ void vec_subtract_kernel(float* vec1, float* vec2, int length, float** result) {
+        *result = vec_subtract(vec1, vec2, length);
     }
 
     float* run_kernel_vec_subtract(float* vec1, float* vec2, int length) {
-        float *gpu_vec1, *gpu_vec2, *result_dev, *result_host;
+        float *gpu_vec1, *gpu_vec2, **result_dev, *result_host;
         int size = sizeof(float) * length;
         cudaMalloc((void**) &gpu_vec1, size);
         cudaMalloc((void**) &gpu_vec2, size);
