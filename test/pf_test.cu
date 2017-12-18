@@ -32,7 +32,7 @@ namespace {
         result = vec_subtract(vec1, vec2, length);
     }
 
-    float run_kernel_vec_subtract(float* vec1, float* vec2, int length) {
+    float* run_kernel_vec_subtract(float* vec1, float* vec2, int length) {
         float *gpu_vec1, *gpu_vec2, *result_dev, *result_host;
         int size = sizeof(float) * length;
         cudaMalloc((void**) &gpu_vec1, sizeof(float) * 2);
@@ -43,7 +43,7 @@ namespace {
         cudaMemcpy(gpu_vec2, vec2, size, cudaMemcpyHostToDevice);
         vec_subtract_kernel<<<1, 1>>>(gpu_vec1, gpu_vec2, length, result_dev);
         cudaMemcpy(result_host, result_dev, sizeof(float) * length, cudaMemcpyDeviceToHost);
-        return *result_host;
+        return result_host;
     }
 
     float* estimate_measurement(float* vec) {
