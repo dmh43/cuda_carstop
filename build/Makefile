@@ -78,14 +78,24 @@ gtest_main.a : gtest-all.o gtest_main.o
 
 # Build tests
 
-pf.o : $(SRC_DIR)/pf.cu
-	nvcc $(CPPFLAGS) $(NVCCFLAGS) -I$(TEST_DIR) -I$(SRC_DIR) -I$(INCLUDE_DIR) -I$(CUDA_DIR)/include $^ -c -o $@
+# pf.o : $(SRC_DIR)/pf.cu
+# 	nvcc $(CPPFLAGS) $(NVCCFLAGS) -I$(TEST_DIR) -I$(SRC_DIR) -I$(INCLUDE_DIR) -I$(CUDA_DIR)/include $^ -c -o $@
 
-test_pf.o: $(TEST_DIR)/pf_test.cu
-	nvcc $(CPPFLAGS) $(NVCCFLAGS) -I$(TEST_DIR) -I$(SRC_DIR) -I$(INCLUDE_DIR) -I$(CUDA_DIR)/include $^ -c -o $@
+# test_pf.o: $(TEST_DIR)/pf_test.cu
+# 	nvcc $(CPPFLAGS) $(NVCCFLAGS) -I$(TEST_DIR) -I$(SRC_DIR) -I$(INCLUDE_DIR) -I$(CUDA_DIR)/include $^ -c -o $@
 
-test_device: pf.o test_pf.o gtest_main.a
-	nvcc -arch=sm_30 $^ -lpthread $(LIB_FLAGS) -o $@
+# test_device: pf.o test_pf.o gtest_main.a
+# 	nvcc -arch=sm_30 $^ -lpthread $(LIB_FLAGS) -o $@
+
+pf.o : $(SRC_DIR)/pf.cu $(INCLUDE_DIR)/pf.cuh $(GTEST_HEADERS)
+	nvcc $(CPPFLAGS) $(NVCCFLAGS) $(CXXFLAGS) -c $(SRC_DIR)/pf.cc
+
+test_pf.o : $(TEST_DIR)/pf_test.cu \
+		$(INCLUDE_DIR)/pf.cuh $(GTEST_HEADERS)
+	nvcc $(CPPFLAGS) $(NVCCFLAGS) $(CXXFLAGS) -c $(SRC_DIR)/pf_test.cu
+
+test_device : pf.o test_pf.o gtest_main.a
+	nvcc $(CPPFLAGS) $(NVCCFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
 
 # pf.o : $(USER_DIR)/pf.cc $(USER_DIR)/pf.h $(GMOCK_HEADERS)
 # 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/pf.cc
