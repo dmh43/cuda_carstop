@@ -22,7 +22,7 @@ namespace {
         cudaMalloc((void**) &result, sizeof(float));
         cudaMemcpy(gpu_vec1, vec1, size, cudaMemcpyHostToDevice);
         cudaMemcpy(gpu_vec2, vec2, size, cudaMemcpyHostToDevice);
-        inner_product_kernel<<<1, 1>>>(gpu_vec1, gpu_vec2, length, result);
+        // inner_product_kernel<<<1, 1>>>(gpu_vec1, gpu_vec2, length, result);
         return *result;
     }
 
@@ -48,8 +48,7 @@ namespace {
     TEST(GPUInnerProductTest, NormSquared) {
         float vec1[2] = {1.0f, 2.0f};
         float vec2[2] = {1.0f, 2.0f};
-        printf("not even");
-        // EXPECT_EQ(5, gpu_inner_product(vec1, vec2, 2));
+        EXPECT_EQ(5, gpu_inner_product(vec1, vec2, 2));
     }
 
     // TEST(InnerProductTest, Any) {
