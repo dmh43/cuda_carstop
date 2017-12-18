@@ -16,6 +16,7 @@
 
 __device__ float inner_product(float* vec1, float* vec2, int length) {
     float acc = 0;
+    printf("heerr");
     for (int vector_index = 0; vector_index < length; vector_index++) {
         acc += vec1[vector_index] * vec2[vector_index];
     }
