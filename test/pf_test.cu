@@ -27,6 +27,25 @@ namespace {
         return *result_host;
     }
 
+
+    __global__ void vec_subtract_kernel(float* vec1, float* vec2, int length, float* result) {
+        result = vec_subtract(vec1, vec2, length);
+    }
+
+    float run_kernel_vec_subtract(float* vec1, float* vec2, int length) {
+        float *gpu_vec1, *gpu_vec2, *result_dev, *result_host;
+        int size = sizeof(float) * length;
+        cudaMalloc((void**) &gpu_vec1, sizeof(float) * 2);
+        cudaMalloc((void**) &gpu_vec2, size);
+        cudaMalloc((void**) &result_dev, sizeof(float));
+        result_host = (float*) malloc(sizeof(float) * length);
+        cudaMemcpy(gpu_vec1, vec1, size, cudaMemcpyHostToDevice);
+        cudaMemcpy(gpu_vec2, vec2, size, cudaMemcpyHostToDevice);
+        vec_subtract_kernel<<<1, 1>>>(gpu_vec1, gpu_vec2, length, result_dev);
+        cudaMemcpy(result_host, result_dev, sizeof(float) * length, cudaMemcpyDeviceToHost);
+        return *result_host;
+    }
+
     float* estimate_measurement(float* vec) {
         float* result = alloc_float(2);
         memcpy(result, vec, 2 * sizeof(float));
@@ -46,7 +65,7 @@ namespace {
         return acc;
     }
 
-    TEST(GPUInnerProductTest, NormSquared) {
+    TEST(InnerProductTest, NormSquared) {
         float vec1[2] = {1.0f, 2.0f};
         float vec2[2] = {1.0f, 2.0f};
         EXPECT_EQ(5, run_kernel_inner_product(vec1, vec2, 2));
@@ -65,12 +84,12 @@ namespace {
     }
 
 
-    // TEST(VecSubtractTest, Any) {
-    //     float vec1[2] = {-1.0f, 1.0f};
-    //     float vec2[2] = {1.0f, 1.0f};
-    //     float result[2] = {-2.0, 0.0};
-    //     EXPECT_TRUE(eq(vec_subtract(vec1, vec2, 2), result, 2));
-    // }
+    TEST(VecSubtractTest, Any) {
+        float vec1[2] = {-1.0f, 1.0f};
+        float vec2[2] = {1.0f, 1.0f};
+        float result[2] = {-2.0, 0.0};
+        EXPECT_TRUE(eq(run_kernel_vec_subtract(vec1, vec2, 2), result, 2));
+    }
 
 
     // TEST(MatVecMul, Identity) {
