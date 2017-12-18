@@ -92,7 +92,7 @@ pf.o : $(SRC_DIR)/pf.cu $(INCLUDE_DIR)/pf/pf.cuh $(GTEST_HEADERS)
 
 test_pf.o : $(TEST_DIR)/pf_test.cu \
 		$(INCLUDE_DIR)/pf/pf.cuh $(GTEST_HEADERS)
-	nvcc $(CPPFLAGS) $(NVCCFLAGS) -I$(GTEST_HEADERS) -I$(SRC_DIR) -I$(INCLUDE_DIR) -I$(CUDA_DIR)/include -c $(SRC_DIR)/pf_test.cu
+	nvcc $(CPPFLAGS) $(NVCCFLAGS) -I$(GTEST_DIR) -I$(SRC_DIR) -I$(INCLUDE_DIR) -I$(CUDA_DIR)/include -c $(SRC_DIR)/pf_test.cu
 
 test_device : pf.o test_pf.o gtest_main.a
 	nvcc -arch=sm_30 -lpthread $^ -o $@
