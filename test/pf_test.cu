@@ -34,7 +34,7 @@ namespace {
     }
     float* step_process(float* vec) {
         float* result = alloc_float(2);
-        memcpy(result, vec, 2 * sizeof(float));
+     e   memcpy(result, vec, 2 * sizeof(float));
         return result;
     }
 
