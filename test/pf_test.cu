@@ -29,7 +29,7 @@ namespace {
 
 
     __global__ void vec_subtract_kernel(float* vec1, float* vec2, int length, float* result) {
-        memcpy(vec_subtract(vec1, vec2, length), result, length * sizeof(float));
+        memcpy(result, vec_subtract(vec1, vec2, length), length * sizeof(float));
     }
 
     float* run_kernel_vec_subtract(float* vec1, float* vec2, int length) {
