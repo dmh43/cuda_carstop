@@ -100,7 +100,9 @@ __device__ void add_noise(float* vec,
 __device__ float calc_unnormalized_importance_weight(systemModel model,
                                                      float* current_state_estimate,
                                                      float* current_measurement) {
+    printf("kkkk\n", *result);
     float* predicted_measurement = model.estimate_measurement(current_state_estimate);
+    printf("iiii\n", *result);
     float* error = vec_subtract(current_measurement, predicted_measurement, model.num_measurement_variables);
     float unnormalized_weight = exp(-0.5 * calc_norm_squared_in(error,
                                                                 model.measurement_noise_covariance_inv,

@@ -93,7 +93,6 @@ namespace {
                                                                float* current_state_estimate,
                                                                float* current_measurement,
                                                                float* result) {
-        printf("kkkk\n", *result);
         *result = calc_unnormalized_importance_weight(*model, current_state_estimate, current_measurement);
         printf("hiiimmm\n", *result);
     }
