@@ -65,8 +65,27 @@ namespace {
         mat_vec_mul_kernel<<<1, 1>>>(gpu_mat, gpu_vec, input_length, result_length, result_dev);
         cudaDeviceSynchronize();
         cudaMemcpy(result_host, result_dev, result_size, cudaMemcpyDeviceToHost);
-        printf("%f\n", result_host[0]);
-        printf("%f\n", result_host[1]);
+        return result_host;
+    }
+
+    __global__ void calc_norm_squared_in_kernel(float* vec, float* mat, int length, float* result) {
+        memcpy(result, calc_norm_squared_in(vec, mat, length), length * sizeof(float));
+    }
+
+    float* run_kernel_calc_norm_squared_in(float* vec, float* mat, int length) {
+        float *gpu_mat, *gpu_vec, *result_dev, *result_host;
+        int vec_size = sizeof(float) * input_length;
+        int mat_size = sizeof(float) * input_length * result_length;
+        int result_size = sizeof(float);
+        cudaMalloc((void**) &gpu_mat, mat_size);
+        cudaMalloc((void**) &gpu_vec, vec_size);
+        cudaMalloc((void**) &result_dev, result_size);
+        result_host = (float*) malloc(result_size);
+        cudaMemcpy(gpu_mat, mat, mat_size, cudaMemcpyHostToDevice);
+        cudaMemcpy(gpu_vec, vec, vec_size, cudaMemcpyHostToDevice);
+        calc_norm_squared_in_kernel<<<1, 1>>>(gpu_vec, gpu_mat, length, result_dev);
+        cudaDeviceSynchronize();
+        cudaMemcpy(result_host, result_dev, result_size, cudaMemcpyDeviceToHost);
         return result_host;
     }
 
@@ -129,12 +148,11 @@ namespace {
         EXPECT_TRUE(eq(run_kernel_mat_vec_mul(mat, vec, 2, 2), result, 2));
     }
 
-
-    // TEST(CalcNormSquaredIn, Ones) {
-    //     float vec[] = {1.0f, 1.0f};
-    //     float mat[] = {1.0f, 1.0f, 1.0f, 1.0f};
-    //     EXPECT_EQ(calc_norm_squared_in(vec, mat, 2), 4);
-    // }
+    TEST(CalcNormSquaredIn, Ones) {
+        float vec[] = {1.0f, 1.0f};
+        float mat[] = {1.0f, 1.0f, 1.0f, 1.0f};
+        EXPECT_EQ(run_kernel_calc_norm_squared_in(vec, mat, 2), 4);
+    }
 
 
     // TEST(CalcUnnormalizedImportanceWeight, White) {
