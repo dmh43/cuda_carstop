@@ -74,8 +74,8 @@ namespace {
 
     float* run_kernel_calc_norm_squared_in(float* vec, float* mat, int length) {
         float *gpu_mat, *gpu_vec, *result_dev, *result_host;
-        int vec_size = sizeof(float) * input_length;
-        int mat_size = sizeof(float) * input_length * result_length;
+        int vec_size = sizeof(float) * length;
+        int mat_size = sizeof(float) * length * length;
         int result_size = sizeof(float);
         cudaMalloc((void**) &gpu_mat, mat_size);
         cudaMalloc((void**) &gpu_vec, vec_size);
