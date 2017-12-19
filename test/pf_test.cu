@@ -190,6 +190,7 @@ namespace {
     TEST(CalcUnnormalizedImportanceWeight, White) {
         float initial_state[] = {1.0f, 1.0f};
         float cov[] = {1.0f, 0.0f, 0.0f, 1.0f};
+        printf("%p\n", (void *) estimate_measurement);
         systemModel model = {2, 2, initial_state, cov, cov, cov, cov, estimate_measurement, step_process};
         float current_estimate[] = {0.0f, 0.0f};
         EXPECT_FLOAT_EQ(run_kernel_calc_unnormalized_importance_weight(model, current_estimate, initial_state), 1.0 / M_E);
