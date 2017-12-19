@@ -115,6 +115,7 @@ namespace {
         cudaMemcpy(gpu_current_estimate, current_state_estimate, estimate_size, cudaMemcpyHostToDevice);
         cudaMemcpy(gpu_current_measurement, current_measurement, measurement_size, cudaMemcpyHostToDevice);
         calc_unnormalized_importance_weight_kernel<<<1, 1>>>(gpu_model, gpu_current_estimate, gpu_current_measurement, result_dev);
+        CUDA_CALL( cudaGetLastError() );
         cudaDeviceSynchronize();
         cudaMemcpy(result_host, result_dev, result_size, cudaMemcpyDeviceToHost);
         return *result_host;

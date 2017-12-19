@@ -20,6 +20,13 @@ typedef struct systemModel {
     float_p_float_p_fptr step_process;
 } systemModel;
 
+// Wrapper for CUDA calls, from CUDA API
+// Modified to also print the error code and string
+#define CUDA_CALL(x) do { if ((x) != cudaSuccess ) { \
+            cout << " Error at " << __FILE__ << ":" << __LINE__ << endl; \
+            cout << " Error was " << x << " " << cudaGetErrorString(x) << endl; \
+            return EXIT_FAILURE ;}} while (0) \
+
 __device__ float inner_product(float* vec1, float* vec2, int length);
 
 __device__ float* vec_subtract(float* vec1, float* vec2, int length);
