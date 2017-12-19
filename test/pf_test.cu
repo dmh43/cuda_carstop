@@ -72,7 +72,7 @@ namespace {
         *result = calc_norm_squared_in(vec, mat, length);
     }
 
-    float* run_kernel_calc_norm_squared_in(float* vec, float* mat, int length) {
+    float run_kernel_calc_norm_squared_in(float* vec, float* mat, int length) {
         float *gpu_mat, *gpu_vec, *result_dev, *result_host;
         int vec_size = sizeof(float) * length;
         int mat_size = sizeof(float) * length * length;
@@ -86,7 +86,7 @@ namespace {
         calc_norm_squared_in_kernel<<<1, 1>>>(gpu_vec, gpu_mat, length, result_dev);
         cudaDeviceSynchronize();
         cudaMemcpy(result_host, result_dev, result_size, cudaMemcpyDeviceToHost);
-        return result_host;
+        return *result_host;
     }
 
     float* estimate_measurement(float* vec) {
