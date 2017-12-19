@@ -101,6 +101,7 @@ __device__ float calc_unnormalized_importance_weight(systemModel model,
                                                      float* current_state_estimate,
                                                      float* current_measurement) {
     printf("kkkk\n");
+    printf("%p\n", (void *) model.estimate_measurement);
     float* predicted_measurement = model.estimate_measurement(current_state_estimate);
     printf("iiii\n");
     float* error = vec_subtract(current_measurement, predicted_measurement, model.num_measurement_variables);
