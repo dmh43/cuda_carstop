@@ -30,6 +30,7 @@ namespace {
 
     __global__ void vec_subtract_kernel(float* vec1, float* vec2, int length, float** result) {
         *result = vec_subtract(vec1, vec2, length);
+        printf("%f\n", (*result)[0]);
     }
 
     float* run_kernel_vec_subtract(float* vec1, float* vec2, int length) {
