@@ -28,23 +28,22 @@ namespace {
     }
 
 
-    __global__ void vec_subtract_kernel(float* vec1, float* vec2, int length, float** result) {
-        *result = vec_subtract(vec1, vec2, length);
+    __global__ void vec_subtract_kernel(float* vec1, float* vec2, int length, float* result) {
+        memcpy(vec_subtract(vec1, vec2, length), result, length * sizeof(float));
     }
 
     float* run_kernel_vec_subtract(float* vec1, float* vec2, int length) {
-        float *gpu_vec1, *gpu_vec2, **result_dev, *result_host;
+        float *gpu_vec1, *gpu_vec2, *result_dev, *result_host;
         int size = sizeof(float) * length;
         cudaMalloc((void**) &gpu_vec1, size);
         cudaMalloc((void**) &gpu_vec2, size);
-        cudaMalloc((void**) &result_dev, sizeof(float*));
+        cudaMalloc((void**) &result_dev, size);
         result_host = (float*) malloc(size);
         cudaMemcpy(gpu_vec1, vec1, size, cudaMemcpyHostToDevice);
         cudaMemcpy(gpu_vec2, vec2, size, cudaMemcpyHostToDevice);
         vec_subtract_kernel<<<1, 1>>>(gpu_vec1, gpu_vec2, length, result_dev);
         cudaDeviceSynchronize();
-        printf("%p\n", (void*) *result_dev);
-        // cudaMemcpy(result_host, *result_dev, size, cudaMemcpyDeviceToHost);
+        cudaMemcpy(result_host, result_dev, size, cudaMemcpyDeviceToHost);
         printf("%f\n", result_host[0]);
         printf("%f\n", result_host[1]);
         return result_host;
