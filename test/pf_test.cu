@@ -69,7 +69,7 @@ namespace {
     }
 
     __global__ void calc_norm_squared_in_kernel(float* vec, float* mat, int length, float* result) {
-        memcpy(result, calc_norm_squared_in(vec, mat, length), length * sizeof(float));
+        *result = calc_norm_squared_in(vec, mat, length);
     }
 
     float* run_kernel_calc_norm_squared_in(float* vec, float* mat, int length) {
