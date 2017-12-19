@@ -65,6 +65,8 @@ namespace {
         mat_vec_mul_kernel<<<1, 1>>>(gpu_mat, gpu_vec, input_length, result_length, result_dev);
         cudaDeviceSynchronize();
         cudaMemcpy(result_host, result_dev, result_size, cudaMemcpyDeviceToHost);
+        printf("%f\n", result_host[0]);
+        printf("%f\n", result_host[1]);
         return result_host;
     }
 
