@@ -62,7 +62,7 @@ namespace {
         result_host = (float*) malloc(result_size);
         cudaMemcpy(gpu_mat, mat, mat_size, cudaMemcpyHostToDevice);
         cudaMemcpy(gpu_vec, vec, vec_size, cudaMemcpyHostToDevice);
-        mat_vec_mul_kernel<<<1, 1>>>(gpu_mat, gpu_vec, input_size, result_length, result_dev);
+        mat_vec_mul_kernel<<<1, 1>>>(gpu_mat, gpu_vec, input_length, result_length, result_dev);
         cudaDeviceSynchronize();
         cudaMemcpy(result_host, result_dev, result_size, cudaMemcpyDeviceToHost);
         return result_host;
