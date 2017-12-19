@@ -41,6 +41,7 @@ namespace {
         result_host = (float*) malloc(size);
         cudaMemcpy(gpu_vec1, vec1, size, cudaMemcpyHostToDevice);
         cudaMemcpy(gpu_vec2, vec2, size, cudaMemcpyHostToDevice);
+        printf("%p\n", (void*) result_dev);
         vec_subtract_kernel<<<1, 1>>>(gpu_vec1, gpu_vec2, length, result_dev);
         printf("%p\n", (void*) result_dev);
         // cudaMemcpy(result_host, *result_dev, size, cudaMemcpyDeviceToHost);
