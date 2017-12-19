@@ -101,6 +101,7 @@ __device__ float calc_unnormalized_importance_weight(systemModel model,
                                                      float* current_state_estimate,
                                                      float* current_measurement) {
     float* predicted_measurement = model.estimate_measurement(current_state_estimate);
+    CudaCheckError();
     printf("iiii\n");
     float* error = vec_subtract(current_measurement, predicted_measurement, model.num_measurement_variables);
     float unnormalized_weight = exp(-0.5 * calc_norm_squared_in(error,
