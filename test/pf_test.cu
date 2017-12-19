@@ -9,6 +9,18 @@
 
 namespace {
 
+    __device__ float* estimate_measurement(float* vec) {
+        printf("hiii");
+        float* result = alloc_float(2);
+        memcpy(result, vec, 2 * sizeof(float));
+        return result;
+    }
+    __device__ float* step_process(float* vec) {
+        float* result = alloc_float(2);
+        memcpy(result, vec, 2 * sizeof(float));
+        return result;
+    }
+
     __global__ void inner_product_kernel(float* vec1, float* vec2, int length, float* result) {
         *result = inner_product(vec1, vec2, length);
     }
@@ -121,18 +133,6 @@ namespace {
         cudaDeviceSynchronize();
         cudaMemcpy(result_host, result_dev, result_size, cudaMemcpyDeviceToHost);
         return *result_host;
-    }
-
-    __device__ float* estimate_measurement(float* vec) {
-        printf("hiii");
-        float* result = alloc_float(2);
-        memcpy(result, vec, 2 * sizeof(float));
-        return result;
-    }
-    __device__ float* step_process(float* vec) {
-        float* result = alloc_float(2);
-        memcpy(result, vec, 2 * sizeof(float));
-        return result;
     }
 
     bool eq(float* vec1, float* vec2, int length) {
