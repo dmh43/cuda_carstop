@@ -54,7 +54,7 @@ namespace {
     float* run_kernel_mat_vec_mul(float* mat, float* vec, int input_length, int result_length) {
         float *gpu_mat, *gpu_vec, *result_dev, *result_host;
         int vec_size = sizeof(float) * input_length;
-        int mat_size = sizeof(float) * input_length;
+        int mat_size = sizeof(float) * input_length * result_length;
         int result_size = sizeof(float) * result_length;
         cudaMalloc((void**) &gpu_mat, mat_size);
         cudaMalloc((void**) &gpu_vec, vec_size);
