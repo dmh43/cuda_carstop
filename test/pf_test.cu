@@ -53,16 +53,16 @@ namespace {
 
     float* run_kernel_mat_vec_mul(float* mat, float* vec, int input_length, int result_length) {
         float *gpu_mat, *gpu_vec, *result_dev, *result_host;
-        int input_size = sizeof(float) * input_length;
+        int vec_size = sizeof(float) * input_length;
+        int mat_size = sizeof(float) * input_length;
         int result_size = sizeof(float) * result_length;
-        cudaMalloc((void**) &gpu_mat, input_size);
-        cudaMalloc((void**) &gpu_vec, input_size);
+        cudaMalloc((void**) &gpu_mat, mat_size);
+        cudaMalloc((void**) &gpu_vec, vec_size);
         cudaMalloc((void**) &result_dev, result_size);
         result_host = (float*) malloc(result_size);
-        cudaMemcpy(gpu_mat, mat, input_size * result_size, cudaMemcpyHostToDevice);
-        cudaMemcpy(gpu_vec, vec, input_size, cudaMemcpyHostToDevice);
-        void (*foo)(float*, float*, int, int, float*) = &mat_vec_mul_kernel;
-        (*foo)<<<1, 1>>>(gpu_mat, gpu_vec, input_size, result_size, result_dev);
+        cudaMemcpy(gpu_mat, mat, mat_size, cudaMemcpyHostToDevice);
+        cudaMemcpy(gpu_vec, vec, vec_size, cudaMemcpyHostToDevice);
+        mat_vec_mul_kernel<<<1, 1>>>(gpu_mat, gpu_vec, input_size, result_length, result_dev);
         cudaDeviceSynchronize();
         cudaMemcpy(result_host, result_dev, result_size, cudaMemcpyDeviceToHost);
         return result_host;
