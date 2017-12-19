@@ -47,6 +47,26 @@ namespace {
         return result_host;
     }
 
+    __global__ void mat_vec_mul_kernel(float* mat, float* vec, int input_length, int result_length, float* result) {
+        memcpy(result, mat_vec_mul(mat, vec, input_length, result_length), result_length * sizeof(float));
+    }
+
+    float* run_kernel_mat_vec_mul(float* mat, float* vec, int input_length, int result_length) {
+        float *gpu_mat, *gpu_vec, *result_dev, *result_host;
+        int input_size = sizeof(float) * input_length;
+        int result_size = sizeof(float) * result_length;
+        cudaMalloc((void**) &gpu_mat, input_size);
+        cudaMalloc((void**) &gpu_vec, input_size);
+        cudaMalloc((void**) &result_dev, result_size);
+        result_host = (float*) malloc(result_size);
+        cudaMemcpy(gpu_mat, mat, input_size * result_size, cudaMemcpyHostToDevice);
+        cudaMemcpy(gpu_vec, vec, input_size, cudaMemcpyHostToDevice);
+        vec_subtract_kernel<<<1, 1>>>(gpu_mat, gpu_vec, input_size, result_size, result_dev);
+        cudaDeviceSynchronize();
+        cudaMemcpy(result_host, result_dev, result_size, cudaMemcpyDeviceToHost);
+        return result_host;
+    }
+
     float* estimate_measurement(float* vec) {
         float* result = alloc_float(2);
         memcpy(result, vec, 2 * sizeof(float));
@@ -93,18 +113,18 @@ namespace {
     }
 
 
-    // TEST(MatVecMul, Identity) {
-    //     float vec[] = {-1.0f, 1.0f};
-    //     float mat[] = {1.0f, 0.0f, 0.0f, 1.0f};
-    //     EXPECT_TRUE(eq(mat_vec_mul(mat, vec, 2, 2), vec, 2));
-    // }
+    TEST(MatVecMul, Identity) {
+        float vec[] = {-1.0f, 1.0f};
+        float mat[] = {1.0f, 0.0f, 0.0f, 1.0f};
+        EXPECT_TRUE(eq(run_kernel_mat_vec_mul(mat, vec, 2, 2), vec, 2));
+    }
 
-    // TEST(MatVecMul, Ones) {
-    //     float vec[] = {1.0f, 1.0f};
-    //     float mat[] = {1.0f, 1.0f, 1.0f, 1.0f};
-    //     float result[] = {2.0f, 2.0f};
-    //     EXPECT_TRUE(eq(mat_vec_mul(mat, vec, 2, 2), result, 2));
-    // }
+    TEST(MatVecMul, Ones) {
+        float vec[] = {1.0f, 1.0f};
+        float mat[] = {1.0f, 1.0f, 1.0f, 1.0f};
+        float result[] = {2.0f, 2.0f};
+        EXPECT_TRUE(eq(run_kernel_mat_vec_mul(mat, vec, 2, 2), result, 2));
+    }
 
 
     // TEST(CalcNormSquaredIn, Ones) {
