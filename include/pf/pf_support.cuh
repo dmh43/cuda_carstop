@@ -1,6 +1,51 @@
 #include <curand.h>
 #include <curand_kernel.h>
 
+// Define this to turn on error checking
+#define CUDA_ERROR_CHECK
+
+#define CudaSafeCall( err ) __cudaSafeCall( err, __FILE__, __LINE__ )
+#define CudaCheckError()    __cudaCheckError( __FILE__, __LINE__ )
+
+inline void __cudaSafeCall( cudaError err, const char *file, const int line )
+{
+#ifdef CUDA_ERROR_CHECK
+    if ( cudaSuccess != err )
+    {
+        fprintf( stderr, "cudaSafeCall() failed at %s:%i : %s\n",
+                 file, line, cudaGetErrorString( err ) );
+        exit( -1 );
+    }
+#endif
+
+    return;
+}
+
+inline void __cudaCheckError( const char *file, const int line )
+{
+#ifdef CUDA_ERROR_CHECK
+    cudaError err = cudaGetLastError();
+    if ( cudaSuccess != err )
+    {
+        fprintf( stderr, "cudaCheckError() failed at %s:%i : %s\n",
+                 file, line, cudaGetErrorString( err ) );
+        exit( -1 );
+    }
+
+    // More careful checking. However, this will affect performance.
+    // Comment away if needed.
+    err = cudaDeviceSynchronize();
+    if( cudaSuccess != err )
+    {
+        fprintf( stderr, "cudaCheckError() with sync failed at %s:%i : %s\n",
+                 file, line, cudaGetErrorString( err ) );
+        exit( -1 );
+    }
+#endif
+
+    return;
+}
+
 #define len(coll_ptr) (sizeof(coll_ptr)/sizeof(coll_ptr[0]))
 #define alloc_float(num_elems) ((float*) malloc(num_elems * sizeof(float)))
 #define rand_f() ((float)rand()/(float)(RAND_MAX))
@@ -19,13 +64,6 @@ typedef struct systemModel {
     float_p_float_p_fptr estimate_measurement;
     float_p_float_p_fptr step_process;
 } systemModel;
-
-// Wrapper for CUDA calls, from CUDA API
-// Modified to also print the error code and string
-#define CUDA_CALL(x) do { if ((x) != cudaSuccess ) { \
-            cout << " Error at " << __FILE__ << ":" << __LINE__ << endl; \
-            cout << " Error was " << x << " " << cudaGetErrorString(x) << endl; \
-            return EXIT_FAILURE ;}} while (0) \
 
 __device__ float inner_product(float* vec1, float* vec2, int length);
 
