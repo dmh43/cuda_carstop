@@ -123,6 +123,7 @@ namespace {
     __device__ float* estimate_measurement(float* vec) {
         float* result = alloc_float(2);
         memcpy(result, vec, 2 * sizeof(float));
+        printf("hiii");
         return result;
     }
     __device__ float* step_process(float* vec) {
