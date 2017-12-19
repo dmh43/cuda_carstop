@@ -120,12 +120,12 @@ namespace {
         return *result_host;
     }
 
-    float* estimate_measurement(float* vec) {
+    __device__ float* estimate_measurement(float* vec) {
         float* result = alloc_float(2);
         memcpy(result, vec, 2 * sizeof(float));
         return result;
     }
-    float* step_process(float* vec) {
+    __device__ float* step_process(float* vec) {
         float* result = alloc_float(2);
         memcpy(result, vec, 2 * sizeof(float));
         return result;
