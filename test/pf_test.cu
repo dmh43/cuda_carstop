@@ -29,6 +29,7 @@ namespace {
 
 
     __global__ void vec_subtract_kernel(float* vec1, float* vec2, int length, float** result) {
+        printf("man");
         *result = vec_subtract(vec1, vec2, length);
     }
 
