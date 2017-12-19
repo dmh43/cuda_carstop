@@ -94,7 +94,6 @@ namespace {
                                                                float* current_measurement,
                                                                float* result) {
         *result = calc_unnormalized_importance_weight(*model, current_state_estimate, current_measurement);
-        CudaCheckError();
         printf("hiiimmm\n", *result);
     }
 
