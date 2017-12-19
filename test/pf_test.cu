@@ -110,7 +110,7 @@ namespace {
         cudaMalloc((void**) &gpu_current_measurement, measurement_size);
         cudaMalloc((void**) &result_dev, result_size);
         result_host = (float*) malloc(result_size);
-        cudaMemcpy(gpu_model, model, model_size, cudaMemcpyHostToDevice);
+        cudaMemcpy(gpu_model, &model, model_size, cudaMemcpyHostToDevice);
         cudaMemcpy(gpu_current_estimate, current_state_estimate, estimate_size, cudaMemcpyHostToDevice);
         cudaMemcpy(gpu_current_measurement, current_measurement, measurement_size, cudaMemcpyHostToDevice);
         calc_norm_squared_in_kernel<<<1, 1>>>(*gpu_model, gpu_current_estimate, gpu_current_measurement, result_dev);
