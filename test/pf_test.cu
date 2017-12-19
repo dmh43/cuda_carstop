@@ -89,17 +89,17 @@ namespace {
         return *result_host;
     }
 
-    __global__ void calc_unnormalized_importance_weight_kernel(systemModel model,
+    __global__ void calc_unnormalized_importance_weight_kernel(systemModel* model,
                                                                float* current_state_estimate,
                                                                float* current_measurement,
                                                                float* result) {
-        *result = calc_unnormalized_importance_weight(model, current_state_estimate, current_measurement);
+        *result = calc_unnormalized_importance_weight(*model, current_state_estimate, current_measurement);
     }
 
     float run_kernel_calc_unnormalized_importance_weight(systemModel model,
                                                          float* current_state_estimate,
                                                          float* current_measurement) {
-        systemModel *gpu_model;
+        systemModel* gpu_model;
         float *gpu_current_estimate, *gpu_current_measurement, *result_dev, *result_host;
         int model_size = sizeof(model);
         int estimate_size = sizeof(float) * model.num_state_variables;
@@ -113,7 +113,7 @@ namespace {
         cudaMemcpy(gpu_model, &model, model_size, cudaMemcpyHostToDevice);
         cudaMemcpy(gpu_current_estimate, current_state_estimate, estimate_size, cudaMemcpyHostToDevice);
         cudaMemcpy(gpu_current_measurement, current_measurement, measurement_size, cudaMemcpyHostToDevice);
-        calc_unnormalized_importance_weight_kernel<<<1, 1>>>(*gpu_model, gpu_current_estimate, gpu_current_measurement, result_dev);
+        calc_unnormalized_importance_weight_kernel<<<1, 1>>>(gpu_model, gpu_current_estimate, gpu_current_measurement, result_dev);
         cudaDeviceSynchronize();
         cudaMemcpy(result_host, result_dev, result_size, cudaMemcpyDeviceToHost);
         return *result_host;
