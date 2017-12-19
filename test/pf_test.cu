@@ -89,6 +89,36 @@ namespace {
         return *result_host;
     }
 
+    __global__ void calc_unnormalized_importance_weight_kernel(systemModel model,
+                                                               float* current_state_estimate,
+                                                               float* current_measurement,
+                                                               float* result) {
+        *result = calc_unnormalized_importance_weight(model, current_estimate, initial_state);
+    }
+
+    float run_kernel_calc_unnormalized_importance_weight(systemModel model,
+                                                         float* current_state_estimate,
+                                                         float* current_measurement) {
+        systemModel gpu_model;
+        float *gpu_current_estimate, *gpu_current_measurement, *result_dev, *result_host;
+        int model_size = sizeof(model);
+        int estimate_size = sizeof(float) * model.num_state_variables;
+        int measurement_size = sizeof(float) * model.num_measurement_variables;
+        int result_size = sizeof(float);
+        cudaMalloc((void**) &gpu_model, model_size);
+        cudaMalloc((void**) &gpu_current_estimate, estimate_size);
+        cudaMalloc((void**) &gpu_current_measurement, measurement_size);
+        cudaMalloc((void**) &result_dev, result_size);
+        result_host = (float*) malloc(result_size);
+        cudaMemcpy(gpu_model, model, model_size, cudaMemcpyHostToDevice);
+        cudaMemcpy(gpu_current_estimate, current_state_estimate, estimate_size, cudaMemcpyHostToDevice);
+        cudaMemcpy(gpu_current_measurement, current_measurement, measurement_size, cudaMemcpyHostToDevice);
+        calc_norm_squared_in_kernel<<<1, 1>>>(gpu_model, gpu_current_estimate, gpu_current_measurement, result_dev);
+        cudaDeviceSynchronize();
+        cudaMemcpy(result_host, result_dev, result_size, cudaMemcpyDeviceToHost);
+        return *result_host;
+    }
+
     float* estimate_measurement(float* vec) {
         float* result = alloc_float(2);
         memcpy(result, vec, 2 * sizeof(float));
@@ -155,16 +185,16 @@ namespace {
     }
 
 
-    // TEST(CalcUnnormalizedImportanceWeight, White) {
-    //     float initial_state[] = {1.0f, 1.0f};
-    //     float cov[] = {1.0f, 0.0f, 0.0f, 1.0f};
-    //     systemModel model = {2, 2, initial_state, cov, cov, cov, cov, estimate_measurement, step_process};
-    //     float current_estimate[] = {0.0f, 0.0f};
-    //     EXPECT_FLOAT_EQ(calc_unnormalized_importance_weight(model, current_estimate, initial_state), 1.0 / M_E);
+    TEST(CalcUnnormalizedImportanceWeight, White) {
+        float initial_state[] = {1.0f, 1.0f};
+        float cov[] = {1.0f, 0.0f, 0.0f, 1.0f};
+        systemModel model = {2, 2, initial_state, cov, cov, cov, cov, estimate_measurement, step_process};
+        float current_estimate[] = {0.0f, 0.0f};
+        EXPECT_FLOAT_EQ(run_kernel_calc_unnormalized_importance_weight(model, current_estimate, initial_state), 1.0 / M_E);
 
-    //     float current_estimate_exact[] = {1.0f, 1.0f};
-    //     EXPECT_FLOAT_EQ(calc_unnormalized_importance_weight(model, current_estimate_exact, initial_state), 1);
-    // }
+        float current_estimate_exact[] = {1.0f, 1.0f};
+        EXPECT_FLOAT_EQ(run_kernel_calc_unnormalized_importance_weight(model, current_estimate_exact, initial_state), 1);
+    }
 
 
     // TEST(VecMutateDivide, One) {
