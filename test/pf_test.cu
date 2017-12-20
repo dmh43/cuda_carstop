@@ -112,7 +112,7 @@ namespace {
         printf("hiiimmm\n", *result);
     }
 
-    float* copy_vec_to_device(vec, length) {
+    float* copy_vec_to_device(float* vec, int length) {
         float* gpu_vec;
         cudaMalloc((void**) &gpu_vec, length * sizeof(float));
         cudaMemcpy(gpu_vec, &vec, length * sizeof(float), cudaMemcpyHostToDevice);
