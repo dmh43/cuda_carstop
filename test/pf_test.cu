@@ -110,7 +110,7 @@ namespace {
                                                                float* result) {
         model->estimate_measurement = estimate_measurement;
         model->step_process = step_process;
-        printf("%f\n", model->measurement_noise_covariance_inv[0]);
+        printf("%p\n", model->measurement_noise_covariance_inv);
         printf("%f\n", model->measurement_noise_covariance_inv[1]);
         printf("%f\n", model->measurement_noise_covariance_inv[2]);
         *result = calc_unnormalized_importance_weight(*model, current_state_estimate, current_measurement);
