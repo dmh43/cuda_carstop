@@ -123,7 +123,7 @@ namespace {
         systemModel gpu_model_host = {model.num_state_variables,
                                       model.num_measurement_variables,
                                       copy_vec_to_device(model.initial_state, model.num_state_variables),
-                                      copy_vec_to_device(model.initial_state_cov_sqrt_offset, model.num_state_variables * model.num_state_variables),
+                                      copy_vec_to_device(model.initial_state_cov_sqrt, model.num_state_variables * model.num_state_variables),
                                       copy_vec_to_device(model.measurement_noise_covariance_sqrt, model.num_measurement_variables * model.num_measurement_variables),
                                       copy_vec_to_device(model.measurement_noise_covariance_inv model.num_measurement_variables * model.num_measurement_variables),
                                       copy_vec_to_device(model.process_noise_covariance_sqrt, model.num_state_variables * model.num_state_variables),
