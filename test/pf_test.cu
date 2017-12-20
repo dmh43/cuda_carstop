@@ -108,30 +108,46 @@ namespace {
                                                                float* current_state_estimate,
                                                                float* current_measurement,
                                                                float* result) {
-        model->estimate_measurement = estimate_measurement;
-        model->step_process = step_process;
-        printf("%p\n", model->measurement_noise_covariance_inv);
-        printf("%f\n", model->measurement_noise_covariance_inv[1]);
-        printf("%f\n", model->measurement_noise_covariance_inv[2]);
         *result = calc_unnormalized_importance_weight(*model, current_state_estimate, current_measurement);
         printf("hiiimmm\n", *result);
+    }
+
+    float* copy_vec_to_device(vec, length) {
+        float* gpu_vec;
+        cudaMalloc((void**) &gpu_vec, length * sizeof(float));
+        cudaMemcpy(gpu_vec, &vec, length * sizeof(float), cudaMemcpyHostToDevice);
+        return gpu_vec;
+    }
+
+    systemModel* copy_model_to_device(systemModel model) {
+        systemModel gpu_model_host = {model.num_state_variables,
+                                      model.num_measurement_variables,
+                                      copy_vec_to_device(model.initial_state),
+                                      copy_vec_to_device(model.initial_state_cov_sqrt_offset),
+                                      copy_vec_to_device(model.measurement_noise_covariance_sqrt),
+                                      copy_vec_to_device(model.measurement_noise_covariance_inv),
+                                      copy_vec_to_device(model.process_noise_covariance_sqrt),
+                                      model.estimate_measurement,
+                                      model.step_process};
+        systemModel* gpu_model_dev;
+        int model_size = sizeof(systemModel);
+        cudaMalloc((void**) &gpu_model_dev, model_size);
+        cudaMemcpy(gpu_model_dev, &gpu_model_host, model_size, cudaMemcpyHostToDevice);
+        return gpu_model_dev;
     }
 
     float run_kernel_calc_unnormalized_importance_weight(systemModel model,
                                                          float* current_state_estimate,
                                                          float* current_measurement) {
-        systemModel* gpu_model;
+        systemModel* gpu_model = copy_model_to_device(model);
         float *gpu_current_estimate, *gpu_current_measurement, *result_dev, *result_host;
-        int model_size = sizeof(model);
         int estimate_size = sizeof(float) * model.num_state_variables;
         int measurement_size = sizeof(float) * model.num_measurement_variables;
         int result_size = sizeof(float);
-        cudaMalloc((void**) &gpu_model, model_size);
         cudaMalloc((void**) &gpu_current_estimate, estimate_size);
         cudaMalloc((void**) &gpu_current_measurement, measurement_size);
         cudaMalloc((void**) &result_dev, result_size);
         result_host = (float*) malloc(result_size);
-        cudaMemcpy(gpu_model, &model, model_size, cudaMemcpyHostToDevice);
         cudaMemcpy(gpu_current_estimate, current_state_estimate, estimate_size, cudaMemcpyHostToDevice);
         cudaMemcpy(gpu_current_measurement, current_measurement, measurement_size, cudaMemcpyHostToDevice);
         calc_unnormalized_importance_weight_kernel<<<1, 1>>>(gpu_model, gpu_current_estimate, gpu_current_measurement, result_dev);
